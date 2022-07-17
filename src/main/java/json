@@ -1,0 +1,23 @@
+   {  
+       "name"  :  "deva",  
+       "lastName"  : "singh",  
+       "address" : "khargone",  
+       "mobile"  : 875574633,
+        "list" :[
+         {
+            "infectionName": "dengo join plus",
+            "haemoglobin": "9309d.dd",
+            "platelets": "444449292lakh",
+            "liverFunctionTest": "negetive",
+            "inr": 44
+         },
+         {
+            "infectionName": "maleria jd plus",
+            "haemoglobin": "3333d.dd",
+            "platelets": "349292lakh",
+            "liverFunctionTest": "negetive",
+            "inr": 94
+         }
+         ]
+     }  
+     
