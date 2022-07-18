@@ -48,17 +48,6 @@ public class PatientResource {
 		return Mapper.toPatientVo(dto);
 	}
 
-	
-	
-	/*
-	 * @PatchMapping("/patient/{pid}/reports") public PatientVo
-	 * updateReports(@RequestBody ReportsVo vo, @PathVariable Integer pid) throws
-	 * Exception { ThrowIfNot(pid); ReportDto dto = Mapper.getReport(vo); PatientDto
-	 * dt = patientService.updatePatient(dto, pid); return Mapper.toPatientVo(dt);
-	 * 
-	 * }
-	 */
-
 	public void ThrowIfNot(Integer id) throws Exception {
 		try {
 			patientService.Exist(id);
