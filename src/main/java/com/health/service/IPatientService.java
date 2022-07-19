@@ -1,6 +1,9 @@
 package com.health.service;
 
+import java.util.List;
+
 import com.health.dto.PatientDto;
+import com.health.dto.PatientRequestedDto;
 import com.health.dto.ReportDto;
 
 public interface IPatientService {
@@ -8,6 +11,7 @@ public interface IPatientService {
 	public void Exist(Integer id)throws Exception;
 	public PatientDto findPatientById(Integer id)throws Exception;
 	public PatientDto updatePatient(PatientDto dto,Integer pid)throws Exception;
-
+	public List<PatientDto> findAll()throws Exception;
+    public PatientDto updatePatient(PatientRequestedDto obj,Integer id)throws Exception;
 	
 }

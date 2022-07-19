@@ -1,10 +1,13 @@
 package com.health.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.Transient;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,7 @@ import com.health.bo.Patient;
 import com.health.bo.Report;
 import com.health.dao.IPatientRepo;
 import com.health.dto.PatientDto;
+import com.health.dto.PatientRequestedDto;
 import com.health.dto.ReportDto;
 import com.health.service.Mapper.Mapper;
 import com.health.service.exceptions.RecordModificationException;
@@ -27,8 +31,6 @@ public class PatientServiceImpl implements IPatientService {
 	@Override
 	public PatientDto insertPatient(PatientDto obj) throws Exception {
 		try {
-			System.out.println("service-------------------"+obj);
-			System.out.println("mapper ---------"+Mapper.toPatient(obj));
 			Patient pt = repo.save(Mapper.toPatient(obj));
 			if (pt != null) {
 				return Mapper.getPatientDto(pt);
@@ -39,7 +41,6 @@ public class PatientServiceImpl implements IPatientService {
 			e.printStackTrace();
 			throw new RecordNotInsertedException("Record NOT Inserted");
 		}
-
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class PatientServiceImpl implements IPatientService {
 		try {
 			Optional<Patient> obj = repo.findById(id);
 			if (obj.isPresent()) {
-				//return Mapper.getPatientDto(obj.get());
+				return Mapper.getPatientDto(obj.get());
 			}
 			throw new RecordNotFoundException(" " + id);
 		} catch (Exception e) {
@@ -79,28 +80,61 @@ public class PatientServiceImpl implements IPatientService {
 	public PatientDto updatePatient(PatientDto dto, Integer pid) throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			Patient p1=null;
-			Optional<Patient> patient= repo.findById(pid);
-             if(patient.isPresent())
-             { 
-            	p1=patient.get(); 
-             }
-			p1.setPName(dto.getPName());
-			p1.setList(Mapper.getReportList(dto.getList()));
-
-			if (p1.getPid() == pid) {
+			Patient p1 = null;
+			System.out.println("inside service-------------------" + dto);
+			Optional<Patient> patient = repo.findById(pid);
+			if (patient.isPresent()) {
+				p1 = patient.get();
+				BeanUtils.copyProperties(dto, p1);
+				p1.setPid(pid);
 				Patient p3 = repo.save(p1);
-				if (p3 != null) {
-					return Mapper.getPatientDto(p3);
-				}
+				return Mapper.getPatientDto(p3);
 			}
+
 			throw new RecordModificationException("pid" + pid);
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			// TODO: handle exception
 			throw e;
 		}
 	}
 
-	
+	@Override
+	public List<PatientDto> findAll() throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			List<Patient> obj = repo.findAll();
+			List<PatientDto> list = new ArrayList<PatientDto>();
+			for (Patient p : obj) {
+				list.add(Mapper.getPatientDto(p));
+			}
+			return list;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+
+	}
+
+	@Override
+	@Transactional
+	public PatientDto updatePatient(PatientRequestedDto obj, Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			repo.updatePatinet(obj, id);
+			Optional<Patient> optional = repo.findById(id);
+			if (optional.isPresent()) {
+				Patient patient = optional.get();
+				return Mapper.getPatientDto(patient);
+			}
+			throw new RecordNotFoundException("not found");
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+
+	}
 
 }

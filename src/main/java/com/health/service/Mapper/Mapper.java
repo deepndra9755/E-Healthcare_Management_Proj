@@ -1,6 +1,9 @@
 package com.health.service.Mapper;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,10 +52,7 @@ public class Mapper {
 		return pd;
 	}
 
-	public static Report getReport(ReportDto obj) {
-		return new Report(obj.getInfectionName(), obj.getHaemoglobin(), obj.getPlatelets(), obj.getLiverFunctionTest(),
-				obj.getInr(), LocalDate.now(), new Patient());
-	}
+	
 
 	public static ReportDto getReport(Report obj) {
 		return new ReportDto(obj.getPAge(), obj.getInfectionName(), obj.getHaemoglobin(), obj.getPlatelets(),

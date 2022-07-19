@@ -1,5 +1,8 @@
 package com.health.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.health.controller.mapper.Mapper;
 import com.health.dto.PatientDto;
+import com.health.dto.PatientRequestedDto;
 import com.health.dto.ReportDto;
 import com.health.service.IPatientService;
+import com.health.vo.PatientRequestVo;
 import com.health.vo.PatientVo;
 import com.health.vo.ReportsVo;
 
@@ -35,17 +40,26 @@ public class PatientResource {
 	public PatientVo findPatient(@PathVariable Integer pid) throws Exception {
 		ThrowIfNot(pid);
 		PatientDto dto = patientService.findPatientById(pid);
-
 		return Mapper.toPatientVo(dto);
 	}
-
+	
 	@PutMapping("/patient/{pid}")
-	public PatientVo updatePatient(@RequestBody PatientVo vo, @PathVariable Integer pid) throws Exception {
+	public PatientVo updatePatient(@RequestBody PatientRequestVo vo, @PathVariable Integer pid) throws Exception {
 		ThrowIfNot(pid);
-		PatientDto vo1 = Mapper.toPatientDto(vo);
-		PatientDto dto = patientService.updatePatient(vo1, pid);
+		PatientRequestedDto dto=Mapper.toPatientRequestedDto(vo);
+		  PatientDto dt=patientService.updatePatient(dto,pid);
+		  return Mapper.toPatientVo(dt);
+	}
 
-		return Mapper.toPatientVo(dto);
+	@GetMapping("/patient")
+	public List<PatientVo> findAll() throws Exception {
+
+		List<PatientDto> obj = patientService.findAll();
+		List<PatientVo> list = new ArrayList<PatientVo>();
+		for (PatientDto ob : obj) {
+			list.add(Mapper.toPatientVo(ob));
+		}
+		return list;
 	}
 
 	public void ThrowIfNot(Integer id) throws Exception {
